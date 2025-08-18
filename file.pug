@@ -1,0 +1,128 @@
+//- Base Layout
+mixin layout(title)
+  doctype html
+  html(lang="en")
+    head
+      meta(charset="UTF-8")
+      meta(name="viewport" content="width=device-width, initial-scale=1.0")
+      title= title
+      link(rel="stylesheet" href="styles.css")
+    body
+      .container
+        block content
+
+//- Welcome Screen
++layout("Guessing Game")
+  .card
+    h1 Welcome to Guessing Game
+    button.btn Create Game
+    button.btn Join Game
+
+//- Join Game Screen  
++layout("Join Game")
+  .card
+    h2 Join Game
+    .input-group
+      input.input(type="text" placeholder="Username")
+    .input-group
+      input.input(type="text" placeholder="Game Code")
+    button.btn Join Game
+    p Don't have a code? 
+      a.link(href="#") Create game
+      |  and invite your friends
+
+//- Lobby Screen (Waiting for Game Master)
++layout("Game Lobby")
+  .game-card
+    .left-panel
+      .game-info
+        .game-master Zainny
+        .game-master-label Game Master
+      .answer-section
+        .input-with-button
+          input.answer-input(type="text" placeholder="Your Answer")
+          button.submit-btn →
+    .right-panel
+      .game-info
+        .game-code 234567
+        .game-code-label Game Code
+        .share-text Share the game code with your friend and ask them to join
+      .players-section
+        h3 Connected Player (3)
+        ul.player-list
+          li.player-item Zainab - 0 Score
+          li.player-item Tobi - 0 Score
+          li.player-item Becky - 0 Score
+      button.btn Start Game
+
+//- Game Master Question Screen
++layout("Game Master")
+  .game-card
+    .left-panel
+      .game-info
+        .game-master Zainny
+        .game-master-label Game kaster
+      .question-form
+        h4 Ask Question
+        .form-group
+          input.input(type="text" placeholder="Your Question")
+        .form-group
+          input.input(type="text" placeholder="Your answer")
+    .right-panel
+      .game-info
+        .attempts
+          .attempts-count 1/3
+          .attempts-label Attempts
+      .players-section
+        h3 Connected Player (3)
+        ul.player-list
+          li.player-item Zainab - 0 Score
+          li.player-item Zainab - 0 Score
+          li.player-item Zainab - 0 Score
+
+//- Active Game Screen
++layout("Active Game")
+  .game-card
+    .left-panel
+      .game-info
+        .game-master Zainny
+        .game-master-label Player
+      .question-card
+        .question-label Question
+        .question-text What is the capital of Rivers State
+        .question-icon ?
+      .answer-section
+        .input-with-button
+          input.answer-input(type="text" value="Lagos")
+          button.submit-btn →
+    .right-panel
+      .game-info
+        .attempts
+          .attempts-count 1/3
+          .attempts-label Attempts
+      .players-section
+        h3 Connected Player (3)
+        ul.player-list
+          li.player-item Zainab - 0 Score
+          li.player-item Tobi - 0 Score
+          li.player-item BEcky - 0 Score
+
+//- Game Results Screen
++layout("Game Results")
+  .game-card
+    .left-panel
+      .game-info
+        .game-master Zainny
+        .game-master-label Player
+      .notification Zainab got the correct answer and wins 10 point
+      .answer-section
+        .input-with-button
+          input.answer-input(type="text" placeholder="Your Answer")
+          button.submit-btn →
+    .right-panel
+      .players-section
+        h3 Connected Player (3)
+        ul.player-list
+          li.player-item Zainab - 10 Score
+          li.player-item Tobi - 0 Score
+          li.player-item Becky - 0 Score
