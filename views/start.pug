@@ -1,0 +1,24 @@
+extends base
+
+block content
+    if startType === 'join'
+        .card
+            h2 Join Game
+            .input-group
+                input.input(id='username' type="text" placeholder="Username")
+            .input-group
+                input.input(id='gamecode' type="text" placeholder="Game Code")
+            button.btn#join-btn Join Game
+            p Don't have a code? 
+                a.link(href="/create") Create game
+                |  and invite your friends
+
+    else 
+        .card
+            h2 Create Game
+            .input-group
+                input.input(id='username' type="text" placeholder="Username")
+            button.btn#create-btn(type='submit') Create Game
+            p Have a code? 
+                a.link(href="/join") join game
+                |  and invite your friends

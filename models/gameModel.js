@@ -56,7 +56,7 @@ const gameSessionSchema = new mongoose.Schema({
 gameSessionSchema.pre(/^find/, function (next) {
   this.populate({
     path: "gameMaster players",
-    select: "name",
+    select: "username",
   });
   next();
 });

@@ -1,0 +1,28 @@
+.right-panel
+    if gameMaster
+        .game-info
+            .game-code= game.gameCode
+            .game-code-label Game Code
+            .share-text Share the game code with your friend and ask them to join
+        .players-section
+            h3= `Connected Player (${game.players.length})`
+            ul.player-list
+            each player in game.players
+                if user._id.toString() === player.user._id.toString() && player.user._id.toString() === game.gameMaster._id.toString()
+                    li.player-item= `${player.user.username} - ${player.score} (Game Master) (You)`
+                else if player.user._id.toString() === game.gameMaster._id.toString()
+                    li.player-item= `${player.user.username} - ${player.score} (Game Master)`
+                else 
+                    li.player-item= `${player.user.username} - ${player.score}`
+        button.btn Start Game
+    else 
+        .players-section
+            h3= `Connected Player (${game.players.length})`
+            ul.player-list
+            each player in game.players
+                if user._id.toString() === player.user._id.toString() && player.user._id.toString() === game.gameMaster._id.toString()
+                    li.player-item= `${player.user.username} - ${player.score} (Game Master) (You)`
+                else if player.user._id.toString() === game.gameMaster._id.toString()
+                    li.player-item= `${player.user.username} - ${player.score} (Game Master)`
+                else 
+                    li.player-item= `${player.user.username} - ${player.score}`

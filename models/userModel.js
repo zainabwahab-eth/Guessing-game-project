@@ -7,10 +7,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter username"],
     },
-    score: {
-      type: Number,
-      default: 0,
-    },
   },
   { timestamps: true }
 );

@@ -1,0 +1,23 @@
+extends base
+
+block content
+    .game-card
+        .left-panel
+            if gameMaster
+                .game-info
+                    .game-master= game.gameMaster.username
+                    .game-master-label Game Master
+                .answer-section
+                    .input-with-button
+                    input.answer-input(type="text" placeholder="Your Answer" disabled)
+                    button.submit-btn(disabled) →
+            else 
+                .game-info
+                    .game-master= user.username
+                    .game-master-label Player
+                .answer-section
+                    .input-with-button
+                    input.answer-input(type="text" placeholder="Your Answer")
+                    button.submit-btn →
+
+        include _panel

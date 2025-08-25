@@ -17,6 +17,21 @@ export const checkGame = catchAsync(async (req, res, next) => {
 export const createUser = catchAsync(async (req, res, next) => {
   const { username } = req.body;
   const user = await User.create({ username });
+  req.session.userId = user._id;
+  req.user = user;
+  next();
+});
+
+export const getCurrentUser = catchAsync(async (req, res, next) => {
+  if (!req.session.userId) {
+    return next(new AppError("No user in session", 401));
+  }
+
+  const user = await User.findById(req.session.userId);
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+
   req.user = user;
   next();
 });
@@ -68,6 +83,10 @@ export const joinGame = catchAsync(async (req, res, next) => {
 
 export const startGame = catchAsync(async (req, res, next) => {
   const game = req.gameSession;
+
+  if (req.session.userId.toString() !== game.gameMaster.toString()) {
+    return next(new AppError("Only the Game Master can start the game", 403));
+  }
 
   const noOfPlayers = game.players.length;
 
