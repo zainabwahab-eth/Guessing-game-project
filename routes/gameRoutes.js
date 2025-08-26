@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 router.post("/create", createUser, createGame);
-router.patch("/:gameCode/join", checkGame, createUser, joinGame);
+router.patch("/:gameCode/join", createUser, checkGame, joinGame);
 router.patch("/:gameCode/start", checkGame, startGame);
 router.patch("/:gameCode/question", checkGame, addQuestionAndAnswer);
 

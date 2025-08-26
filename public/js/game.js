@@ -1,5 +1,6 @@
 const socket = io("http://localhost:4000");
 const gameCode = document.getElementById("game-container").dataset.gamecode;
+console.log(gameCode);
 
 socket.on("connect", () => {
   socket.emit("joinRoom", { gameCode });

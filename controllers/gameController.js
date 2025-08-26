@@ -16,9 +16,26 @@ export const checkGame = catchAsync(async (req, res, next) => {
 
 export const createUser = catchAsync(async (req, res, next) => {
   const { username } = req.body;
+  const gameCode = req.params.gameCode;
+
+  // Check for duplicate username in the same game
+  if (gameCode) {
+    const game = await GameSession.findOne({ gameCode }).populate(
+      "players", // This is correct now
+      "username"
+    );
+    if (game) {
+      // FIX: Since players is now a simple array, access username directly
+      const existingUsernames = game.players.map((player) => player.username);
+      if (existingUsernames.includes(username)) {
+        return next(new AppError("Username already taken in this game", 400));
+      }
+    }
+  }
   const user = await User.create({ username });
   req.session.userId = user._id;
   req.user = user;
+  console.log(req.user);
   next();
 });
 
@@ -43,11 +60,11 @@ export const createGame = catchAsync(async (req, res, next) => {
   const game = await GameSession.create({
     gameMaster: gameMaster._id,
     gameCode,
-    players: [{ user: gameMaster._id }],
+    players: [gameMaster._id],
   });
 
-  const io = req.app.get("io");
-  io.to(gameCode).emit("userJoined", { username: req.user.username });
+  // Update user to reference this game
+  await User.findByIdAndUpdate(gameMaster._id, { gameSession: game._id });
 
   res.status(201).json({
     status: "success",
@@ -71,9 +88,11 @@ export const joinGame = catchAsync(async (req, res, next) => {
 
   const updatedGame = await GameSession.findOneAndUpdate(
     { gameCode },
-    { $push: { players: { user: player._id } } },
+    { $push: { players: player._id } },
     { new: true }
   );
+
+  await User.findByIdAndUpdate(player._id, { gameSession: updatedGame._id });
 
   const io = req.app.get("io");
   io.to(gameCode).emit("userJoined", {

@@ -1,26 +1,29 @@
 extends base
 
 block content
-    -const gamecode = game ?game.gameCode : ''
-    #game-container(data-gamecode=gamecode)
-        #game-updates
-        .game-card
-            .left-panel
-                if gameMaster
-                    .game-info
-                        .game-master= game.gameMaster.username
-                        .game-master-label Game Master
-                    .answer-section
-                        .input-with-button
-                            input.answer-input(type="text" placeholder="Your Answer" disabled)
-                            button.submit-btn(disabled) →
-                else 
-                    .game-info
-                        .game-master= user.username
-                        .game-master-label Player
-                    .answer-section
-                        .input-with-button
-                            input.answer-input(type="text" placeholder="Your Answer")
-                            button.submit-btn →
+    -const gamecode = game ? game.gameCode : ''
+        #game-container(data-gamecode=gamecode)
+            #game-updates
+            .game-card
+                .left-panel
+                    if gameMaster
+                        .game-info
+                            .game-master= game.gameMaster.username
+                            .game-master-label Game Master
+                        .answer-section
+                            .input-with-button
+                                input.answer-input(type="text" placeholder="Your Answer" disabled)
+                                button.submit-btn(disabled) →
+                    else 
+                        .game-info
+                            .game-master= user.username
+                            .game-master-label Player
+                        .game-attempt 
+                            .game-master= user.username
+                            .game-master-label Player
+                        .answer-section
+                            .input-with-button
+                                input.answer-input(type="text" placeholder="Your Answer")
+                                button.submit-btn →
 
-            include _panel
+                include _panel

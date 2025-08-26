@@ -1,5 +1,3 @@
-// const mongoose = require("mongoose");
-
 import mongoose from "mongoose";
 
 const gameSessionSchema = new mongoose.Schema({
@@ -8,12 +6,10 @@ const gameSessionSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-
   players: [
     {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-      score: { type: Number, default: 0 },
-      attemptLeft: { type: Number, default: 3 },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
   currentRound: {
@@ -55,8 +51,8 @@ const gameSessionSchema = new mongoose.Schema({
 
 gameSessionSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "gameMaster players",
-    select: "username",
+    path: "players",
+    select: "username score attempts currentRound",
   });
   next();
 });

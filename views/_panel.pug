@@ -4,25 +4,34 @@
             .game-code= game.gameCode
             .game-code-label Game Code
             .share-text Share the game code with your friend and ask them to join
+        .game-question.hidden
+            h2 Join Game
+            .input-group
+                input.input(id='question' type="text" placeholder="Question")
+            .input-group
+                input.input(id='answer' type="text" placeholder="Answer")
+            button.btn#question-btn Ask Question
         .players-section
             h3= `Connected Player (${game.players.length})`
             ul.player-list
                 each player in game.players
-                    if user._id.toString() === player.user._id.toString() && player.user._id.toString() === game.gameMaster._id.toString()
-                        li.player-item= `${player.user.username} - ${player.score} (Game Master) (You)`
-                    else if player.user._id.toString() === game.gameMaster._id.toString()
-                        li.player-item= `${player.user.username} - ${player.score} (Game Master)`
+                    if user._id.toString() === player._id.toString() && player._id.toString() === game.gameMaster._id.toString()
+                        li.player-item= `${player.username} - ${player.score} (Game Master) (You)`
+                    else if player._id.toString() === game.gameMaster._id.toString()
+                        li.player-item= `${player.username} - ${player.score} (Game Master)`
                     else 
-                        li.player-item= `${player.user.username} - ${player.score}`
-        button.btn Start Game
+                        li.player-item= `${player.username} - ${player.score}`
+        button.btn#start-btn Start Game
     else 
+        .game-info
+            .share-text Waiting for game-master to start game...
         .players-section
             h3= `Connected Player (${game.players.length})`
             ul.player-list
                 each player in game.players
-                    if user._id.toString() === player.user._id.toString() && player.user._id.toString() === game.gameMaster._id.toString()
-                        li.player-item= `${player.user.username} - ${player.score} (Game Master) (You)`
-                    else if player.user._id.toString() === game.gameMaster._id.toString()
-                        li.player-item= `${player.user.username} - ${player.score} (Game Master)`
+                    if user._id.toString() === player._id.toString() && player._id.toString() === game.gameMaster._id.toString()
+                        li.player-item= `${player.username} - ${player.score} (Game Master) (You)`
+                    else if player._id.toString() === game.gameMaster._id.toString()
+                        li.player-item= `${player.username} - ${player.score} (Game Master)`
                     else 
-                        li.player-item= `${player.user.username} - ${player.score}`
+                        li.player-item= `${player.username} - ${player.score}`
