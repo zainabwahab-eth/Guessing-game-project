@@ -26,20 +26,21 @@ const io = new Server(server, {
   },
 });
 
+app.set("io", io);
+
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // Example: join game room
-  socket.on("joinGame", (gameId) => {
-    socket.join(gameId);
-    console.log(`User ${socket.id} joined game ${gameId}`);
+  socket.on("joinRoom", ({ gameCode }) => {
+    socket.join(gameCode);
+    console.log(`Socket ${socket.id} joined room ${gameCode}`);
+    socket.gameCode = gameCode;
   });
 
-  // Example: handle game move
-  socket.on("makeMove", (data) => {
-    console.log("Move received:", data);
-    // send to other players in the same room
-    io.to(data.gameId).emit("moveMade", data);
+  socket.on("userJoined", (msg) => {
+    if (socket.gameCode) {
+      socket.to(socket.gameCode).emit("userJoined", msg);
+    }
   });
 
   socket.on("disconnect", () => {

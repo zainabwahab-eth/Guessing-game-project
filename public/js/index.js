@@ -3,14 +3,6 @@ const joinBtn = document.getElementById("join-btn");
 
 const socket = io("http://localhost:4000");
 
-// when connected
-socket.on("connect", () => {
-  console.log("Connected to server:", socket.id);
-  
-  // Example: join a game room
-  socket.emit("joinGame", "some-game-id");
-});
-
 const enterGame = async (data, url, method) => {
   try {
     const response = await axios({
@@ -23,6 +15,7 @@ const enterGame = async (data, url, method) => {
         method === "POST"
           ? +response.data.data.game.gameCode
           : +response.data.data.updatedGame.gameCode;
+      socket.emit("joinRoom", { gameCode });
       window.location.assign(`/game/${gameCode}`);
     }
   } catch (err) {

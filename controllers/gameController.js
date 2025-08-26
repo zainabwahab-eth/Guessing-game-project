@@ -46,6 +46,9 @@ export const createGame = catchAsync(async (req, res, next) => {
     players: [{ user: gameMaster._id }],
   });
 
+  const io = req.app.get("io");
+  io.to(gameCode).emit("userJoined", { username: req.user.username });
+
   res.status(201).json({
     status: "success",
     message: "Game session created successfully",
@@ -71,6 +74,12 @@ export const joinGame = catchAsync(async (req, res, next) => {
     { $push: { players: { user: player._id } } },
     { new: true }
   );
+
+  const io = req.app.get("io");
+  io.to(gameCode).emit("userJoined", {
+    score: req.user.score,
+    username: req.user.username,
+  });
 
   res.status(201).json({
     status: "success",
