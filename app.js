@@ -1,19 +1,28 @@
 import express from "express";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import dotenv from "dotenv";
+import cors from "cors";
+dotenv.config({ path: "./config.env" });
 import { fileURLToPath } from "url";
 import path from "path";
 import globalErrorHandler from "./controllers/errController.js";
 import gameRoutes from "./routes/gameRoutes.js";
 import viewRoutes from "./routes/viewRoutes.js";
 
-import dotenv from "dotenv";
-dotenv.config({ path: "./config.env" });
-
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.BACKEND_URL
+        : "http://localhost:4000",
+  })
+);
 
 app.use(express.json());
 

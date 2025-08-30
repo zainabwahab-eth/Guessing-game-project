@@ -1,5 +1,13 @@
 import { showAlert } from "./alert.js";
 
+const BASE_URL =
+  window.env.NODE_ENV === "production"
+    ? window.env.BACKEND_URL
+    : "http://localhost:4000";
+console.log(
+  "From index.js..",
+  window.env.BACKEND_URL === "https://guessing-game-project.onrender.com"
+);
 const createBtn = document.getElementById("create-btn");
 const joinBtn = document.getElementById("join-btn");
 const startBtn = document.getElementById("start-btn");
@@ -36,7 +44,7 @@ export const addQuestion = async (gameCode, question, answer) => {
     }
     const response = await axios({
       method: "PATCH",
-      url: `http://localhost:4000/api/v1/gameSession/${gameCode}/question`,
+      url: `${BASE_URL}/api/v1/gameSession/${gameCode}/question`,
       data: { question, answer },
     });
     if (response.data.status === "success") {
@@ -57,7 +65,7 @@ export const checkAnswer = async (gameCode, answer) => {
     }
     const response = await axios({
       method: "PATCH",
-      url: `http://localhost:4000/api/v1/gameSession/${gameCode}/answer`,
+      url: `${BASE_URL}/api/v1/gameSession/${gameCode}/answer`,
       data: { answer },
     });
     if (response.data.status === "correct") {
@@ -78,7 +86,7 @@ export const leaveGame = async (gameCode) => {
     try {
       const response = await axios({
         method: "PATCH",
-        url: `http://localhost:4000/api/v1/gameSession/${gameCode}/leave`,
+        url: `${BASE_URL}/api/v1/gameSession/${gameCode}/leave`,
       });
       if (response.data.status === "success") {
         window.location.assign("/");
@@ -103,7 +111,7 @@ if (joinBtn) {
       return;
     }
     const data = { username };
-    const url = `http://localhost:4000/api/v1/gameSession/${userGameCode}/join`;
+    const url = `${BASE_URL}/api/v1/gameSession/${userGameCode}/join`;
     const method = "PATCH";
 
     await enterGame(data, url, method);
@@ -123,7 +131,7 @@ if (createBtn) {
     }
 
     const data = { username };
-    const url = "http://localhost:4000/api/v1/gameSession/create";
+    const url = `${BASE_URL}/api/v1/gameSession/create`;
     const method = "POST";
 
     await enterGame(data, url, method);
@@ -138,7 +146,7 @@ if (startBtn) {
     try {
       const response = await axios({
         method: "PATCH",
-        url: `http://localhost:4000/api/v1/gameSession/${gameCode}/start`,
+        url: `${BASE_URL}/api/v1/gameSession/${gameCode}/start`,
       });
       if (response.data.status === "success") {
         console.log("Game started successfully");

@@ -1,7 +1,17 @@
 import { showUpdate } from "./update.js";
 
 // const socket = io("http://localhost:4000");
-const socket = io("https://guessing-game-project.onrender.com");
+const backendUrl =
+  window.env.NODE_ENV === "production"
+    ? window.env.BACKEND_URL
+    : "http://localhost:4000";
+console.log(
+  "From game.js..",
+  window.env.BACKEND_URL === "https://guessing-game-project.onrender.com"
+);
+const socket = io(backendUrl, {
+  transports: ["websocket", "polling"],
+});
 
 const updateGameMasterView = (isGameMaster) => {
   const gmSection = document.querySelector(".gamemaster-section");

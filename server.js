@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+dotenv.config({ path: "./config.env" });
 import { createServer } from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
-
-dotenv.config({ path: "./config.env" });
 
 const DB = process.env.DATABASE_URL;
 
@@ -21,7 +20,10 @@ const server = createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://guessing-game-project.onrender.com",
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.BACKEND_URL
+        : "http://localhost:4000",
     methods: ["GET", "POST", "PATCH"],
   },
 });

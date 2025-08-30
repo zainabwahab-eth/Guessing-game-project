@@ -15,7 +15,12 @@ html(lang='en')
         block content
         
         block scripts
-        script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
-        script(src="/socket.io/socket.io.js")
-        script(type='module' src="/js/game.js")
-        script(type='module' src="/js/index.js")
+          script.
+            window.env = {
+              BACKEND_URL: "#{process.env.BACKEND_URL || 'http://localhost:4000'}",
+              NODE_ENV: "#{process.env.NODE_ENV || 'development'}"
+            };
+          script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+          script(src="/socket.io/socket.io.js")
+          script(type='module' src="/js/game.js")
+          script(type='module' src="/js/index.js")
