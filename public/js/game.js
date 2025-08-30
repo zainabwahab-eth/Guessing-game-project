@@ -1,7 +1,7 @@
 import { showUpdate } from "./update.js";
 
 // const socket = io("http://localhost:4000");
-const socket = io();
+const socket = io("https://guessing-game-project.onrender.com");
 
 const updateGameMasterView = (isGameMaster) => {
   const gmSection = document.querySelector(".gamemaster-section");

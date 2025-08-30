@@ -21,9 +21,11 @@ const server = createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "https://guessing-game-project.onrender.com",
+    methods: ["GET", "POST", "PATCH"],
   },
 });
+
 app.set("io", io);
 
 io.on("connection", (socket) => {
