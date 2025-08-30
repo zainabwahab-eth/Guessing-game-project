@@ -17,6 +17,12 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 
+app.set("view engine", "pug");
+
+app.set("views", path.join(__dirname, "views"));
+
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET, // change to env variable
@@ -27,20 +33,17 @@ app.use(
       collectionName: "sessions",
     }),
     cookie: {
-      maxAge: 1000 * 60 * 60, // 1 hour
+      httpOnly: true, // Prevent XSS attacks
+      secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+      sameSite: "lax", // CSRF protection
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 hour
     },
   })
 );
-
-app.set("view engine", "pug");
-
-app.set("views", path.join(__dirname, "views"));
-
-app.use(express.static(path.join(__dirname, "public")));
-
-export default app;
 
 app.use("/api/v1/gameSession", gameRoutes);
 app.use("/", viewRoutes);
 
 app.use(globalErrorHandler);
+
+export default app;

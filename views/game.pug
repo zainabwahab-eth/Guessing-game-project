@@ -2,28 +2,40 @@ extends base
 
 block content
     -const gamecode = game ? game.gameCode : ''
-        #game-container(data-gamecode=gamecode)
-            #game-updates
-            .game-card
-                .left-panel
-                    if gameMaster
-                        .game-info
-                            .game-master= game.gameMaster.username
-                            .game-master-label Game Master
-                        .answer-section
-                            .input-with-button
-                                input.answer-input(type="text" placeholder="Your Answer" disabled)
-                                button.submit-btn(disabled) →
-                    else 
-                        .game-info
-                            .game-master= user.username
-                            .game-master-label Player
-                        .game-attempt 
-                            .game-master= user.username
-                            .game-master-label Player
-                        .answer-section
-                            .input-with-button
-                                input.answer-input(type="text" placeholder="Your Answer")
-                                button.submit-btn →
+    -const userId = user ? user._id : ''
+    -const gameMasterId = game ? game.gameMaster._id : ''
+    #game-updates
+    #game-container(data-gamecode=gamecode, data-user-id=userId, data-gamemaster-id=gameMasterId, data-game-status=game.status)
+        button#leave-btn Leave Game
+        
+        // Section 1: Question/Answer (Everyone sees this)
+        .question-answer-section
+            .player-details(data-user-id=userId)= `${user.username} - ${user.score}`
+            .question-section.hidden 
+                h4.question-header Question
+                p.question-sub ##
+                .time-bar 
+            .answer-section
+                .input-with-button
+                    input.answer-input(type="text" id='userAnswer' placeholder="Your Answer" disabled=gameMaster)
+                    button#submit-btn(disabled=gameMaster) Submit
+        
+        // Section 2: Players List (Everyone sees this)
+        .players-section
+            h4 Connected Players
+            ul.player-list
+                each player in game.players
+                    li.player-item(data-id=player._id)= `${player.username} - ${player.score}`
+        
+        // Section 3: Game Master Controls (Only GM sees this)
+        .gamemaster-section.hidden
+            .game-info
+                .game-code= `Game Code - ${game.gameCode}`
+                .share-text Share with friends before you start. Other can't join after game starts
 
-                include _panel
+            button.btn#start-btn Start Game
+            
+            .question-form.hidden
+                input.input(id='question' type="text" placeholder="Enter Question")
+                input.input(id='answer' type="text" placeholder="Enter Answer")
+                button.btn#question-btn Ask Question

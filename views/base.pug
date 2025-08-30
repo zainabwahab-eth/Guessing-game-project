@@ -3,15 +3,14 @@ html(lang='en')
     head
          meta(charset='UTF-8')
          meta(name='viewport' content='width=device-width, initial-scale=1.0')
-         meta(name='description' content='Find your dream job with our comprehensive job portal')
+         meta(name='description' content='You best game')
          title #{title} | Guessing game
          link(rel='stylesheet', href='/css/styles.css')
-         link(rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap')
-         link(rel='preconnect' href='https://fonts.googleapis.com')
-         link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin)
         
     -const gameCode = game ?game.gameCode : ''     
     body(data-gamecode=gameCode)
+      img.logo(src='/img/zainab.svg' alt='Logo image')
+
       .container
         block content
         

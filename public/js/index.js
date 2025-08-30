@@ -3,8 +3,9 @@ import { showAlert } from "./alert.js";
 const createBtn = document.getElementById("create-btn");
 const joinBtn = document.getElementById("join-btn");
 const startBtn = document.getElementById("start-btn");
-
-const socket = io("http://localhost:4000");
+const questionBtn = document.getElementById("question-btn");
+const submitBtn = document.getElementById("submit-btn");
+const leaveBtn = document.getElementById("leave-btn");
 
 const enterGame = async (data, url, method) => {
   try {
@@ -18,13 +19,75 @@ const enterGame = async (data, url, method) => {
         method === "POST"
           ? +response.data.data.game.gameCode
           : +response.data.data.updatedGame.gameCode;
-      socket.emit("joinRoom", { gameCode });
       window.location.assign(`/game/${gameCode}`);
     }
   } catch (err) {
     console.error("err", err);
     const errorMessage = err.response?.data?.message || "Error joining game";
     showAlert("error", errorMessage);
+  }
+};
+
+export const addQuestion = async (gameCode, question, answer) => {
+  try {
+    if (!question || !answer) {
+      showAlert("error", "Please enter both question and answer");
+      return;
+    }
+    const response = await axios({
+      method: "PATCH",
+      url: `http://localhost:4000/api/v1/gameSession/${gameCode}/question`,
+      data: { question, answer },
+    });
+    if (response.data.status === "success") {
+      console.log("Question asked successfully");
+    }
+  } catch (err) {
+    console.error("Add question error:", err);
+    const errorMessage = err.response?.data?.message || "Error adding question";
+    showAlert("error", errorMessage);
+  }
+};
+
+export const checkAnswer = async (gameCode, answer) => {
+  try {
+    if (!answer) {
+      showAlert("error", "Please enter your answer");
+      return;
+    }
+    const response = await axios({
+      method: "PATCH",
+      url: `http://localhost:4000/api/v1/gameSession/${gameCode}/answer`,
+      data: { answer },
+    });
+    if (response.data.status === "correct") {
+      console.log("answer correct");
+    } else if (response.data.status === "wrong") {
+      console.log("answer wrong");
+    }
+  } catch (err) {
+    console.error("Submit answer error:", err);
+    const errorMessage =
+      err.response?.data?.message || "Error submitting answer";
+    showAlert("error", errorMessage);
+  }
+};
+
+export const leaveGame = async (gameCode) => {
+  if (confirm("Are you sure you want to leave the game?")) {
+    try {
+      const response = await axios({
+        method: "PATCH",
+        url: `http://localhost:4000/api/v1/gameSession/${gameCode}/leave`,
+      });
+      if (response.data.status === "success") {
+        window.location.assign("/");
+      }
+    } catch (err) {
+      console.error("Leave game error:", err);
+      const errorMessage = err.response?.data?.message || "Error leaving game";
+      showAlert("error", errorMessage);
+    }
   }
 };
 
@@ -36,34 +99,26 @@ if (joinBtn) {
     const userGameCode = document.getElementById("gamecode").value.trim();
 
     if (!username || !userGameCode) {
-      alert("Please enter both username and game code");
+      showAlert("error", "Please enter both username and game code");
       return;
     }
-
     const data = { username };
     const url = `http://localhost:4000/api/v1/gameSession/${userGameCode}/join`;
     const method = "PATCH";
 
-    try {
-      await enterGame(data, url, method);
-      document.getElementById("username").value = "";
-      document.getElementById("gamecode").value = "";
-    } catch (error) {
-      console.error("Join game error:", error);
-      const errorMessage =
-        error.response?.data?.message || "Error joining game";
-      showAlert("error", errorMessage);
-    }
+    await enterGame(data, url, method);
+    document.getElementById("username").value = "";
+    document.getElementById("gamecode").value = "";
   });
 }
 
 if (createBtn) {
-  createBtn.addEventListener("click", (e) => {
+  createBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const username = document.getElementById("username").value.trim();
 
     if (!username) {
-      alert("Please enter username");
+      showAlert("error", "Please enter username");
       return;
     }
 
@@ -71,7 +126,7 @@ if (createBtn) {
     const url = "http://localhost:4000/api/v1/gameSession/create";
     const method = "POST";
 
-    enterGame(data, url, method);
+    await enterGame(data, url, method);
     document.getElementById("username").value = "";
   });
 }
@@ -85,12 +140,43 @@ if (startBtn) {
         method: "PATCH",
         url: `http://localhost:4000/api/v1/gameSession/${gameCode}/start`,
       });
-
-      console.log(response);
+      if (response.data.status === "success") {
+        console.log("Game started successfully");
+      }
     } catch (err) {
-      console.error("Join game error:", err);
-      const errorMessage = err.response?.data?.message || "Error joining game";
+      console.error("Start game error:", err);
+      const errorMessage = err.response?.data?.message || "Error Starting game";
       showAlert("error", errorMessage);
     }
+  });
+}
+
+if (questionBtn) {
+  questionBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const gameCode = document.getElementById("game-container").dataset.gamecode;
+    const question = document.getElementById("question").value;
+    const answer = document.getElementById("answer").value;
+    await addQuestion(gameCode, question, answer);
+    document.getElementById("question").value = "";
+    document.getElementById("answer").value = "";
+  });
+}
+
+if (submitBtn) {
+  submitBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const gameCode = document.getElementById("game-container").dataset.gamecode;
+    const answer = document.getElementById("userAnswer").value;
+    await checkAnswer(gameCode, answer);
+    document.getElementById("userAnswer").value = "";
+  });
+}
+
+if (leaveBtn) {
+  leaveBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const gameCode = document.getElementById("game-container").dataset.gamecode;
+    await leaveGame(gameCode);
   });
 }

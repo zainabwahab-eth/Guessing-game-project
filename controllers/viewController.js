@@ -1,5 +1,22 @@
 import catchAsync from "../utils/catchAsync.js";
 import GameSession from "./../models/gameModel.js";
+import User from "../models/userModel.js";
+
+export const requireUserForGame = catchAsync(async (req, res, next) => {
+  if (!req.session || !req.session.userId) {
+    // Redirect to join page if no user session
+    return res.redirect(`/join`);
+  }
+
+  const user = await User.findById(req.session.userId);
+  if (!user) {
+    // Redirect to join page if user not found
+    return res.redirect(`/join`);
+  }
+
+  req.user = user;
+  next();
+});
 
 export const getWelcome = (req, res) => {
   res.status(200).render("welcome", {
