@@ -19,7 +19,11 @@ const PORT = process.env.PORT || 4000;
 
 const server = createServer(app);
 
-const socket = io();
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 app.set("io", io);
 
 io.on("connection", (socket) => {
