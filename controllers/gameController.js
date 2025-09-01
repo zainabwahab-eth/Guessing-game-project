@@ -130,11 +130,10 @@ export const createUser = catchAsync(async (req, res, next) => {
   // Check for duplicate username in the same game
   if (gameCode) {
     const game = await GameSession.findOne({ gameCode }).populate(
-      "players", // This is correct now
+      "players",
       "username"
     );
     if (game) {
-      // FIX: Since players is now a simple array, access username directly
       const existingUsernames = game.players.map((player) => player.username);
       if (existingUsernames.includes(username)) {
         return next(new AppError("Username already taken in this game", 400));

@@ -4,6 +4,7 @@ const BASE_URL =
   window.env.NODE_ENV === "production"
     ? window.env.BACKEND_URL
     : "http://localhost:4000";
+
 const createBtn = document.getElementById("create-btn");
 const joinBtn = document.getElementById("join-btn");
 const startBtn = document.getElementById("start-btn");

@@ -32,23 +32,30 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(path.join(__dirname, "public")));
 
+app.set("trust proxy", 1);
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET, // change to env variable
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.DATABASE_URL, // your DB connection
+      mongoUrl: process.env.DATABASE_URL,
       collectionName: "sessions",
     }),
     cookie: {
       httpOnly: true, // Prevent XSS attacks
       secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
-      sameSite: "lax", // CSRF protection
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 hour
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // CSRF protection
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
   })
 );
+
+app.use((req, res, next) => {
+  console.log("Session:", req.session);
+  next();
+});
 
 app.use("/api/v1/gameSession", gameRoutes);
 app.use("/", viewRoutes);

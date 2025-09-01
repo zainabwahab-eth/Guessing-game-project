@@ -43,7 +43,7 @@ export const getCreatePage = (req, res) => {
 export const getGamePage = catchAsync(async (req, res) => {
   const { gameCode } = req.params;
   const game = await GameSession.findOne({ gameCode })
-    .populate("players.user", "username")
+    .populate("players", "username")
     .populate("gameMaster", "username");
   const user = req.user;
   const gameMaster =
