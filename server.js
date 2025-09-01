@@ -44,6 +44,10 @@ io.on("connection", (socket) => {
       socket.to(socket.gameCode).emit("userJoined", msg);
     }
   });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
 });
 
 server.listen(PORT, () => {

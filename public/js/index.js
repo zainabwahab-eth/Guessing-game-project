@@ -21,9 +21,11 @@ const enterGame = async (data, url, method) => {
     if (response.data.status === "success") {
       const gameCode =
         method === "POST"
-          ? +response.data.data.game.gameCode
-          : +response.data.data.updatedGame.gameCode;
-      window.location.assign(`/game/${gameCode}`);
+          ? response.data.data.game.gameCode
+          : response.data.data.updatedGame.gameCode;
+
+      console.log("Redirecting to game:", gameCode);
+      window.location.href = `/game/${gameCode}`;
     }
   } catch (err) {
     console.error("err", err);

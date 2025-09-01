@@ -1,6 +1,5 @@
 import { showUpdate } from "./update.js";
 
-// const socket = io("http://localhost:4000");
 const backendUrl =
   window.env.NODE_ENV === "production"
     ? window.env.BACKEND_URL
