@@ -4,10 +4,6 @@ const BASE_URL =
   window.env.NODE_ENV === "production"
     ? window.env.BACKEND_URL
     : "http://localhost:4000";
-console.log(
-  "From index.js..",
-  window.env.BACKEND_URL === "https://guessing-game-project.onrender.com"
-);
 const createBtn = document.getElementById("create-btn");
 const joinBtn = document.getElementById("join-btn");
 const startBtn = document.getElementById("start-btn");

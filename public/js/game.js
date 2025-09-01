@@ -5,10 +5,6 @@ const backendUrl =
   window.env.NODE_ENV === "production"
     ? window.env.BACKEND_URL
     : "http://localhost:4000";
-console.log(
-  "From game.js..",
-  window.env.BACKEND_URL === "https://guessing-game-project.onrender.com"
-);
 const socket = io(backendUrl, {
   transports: ["websocket", "polling"],
 });
