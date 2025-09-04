@@ -445,3 +445,17 @@ h2 {
 .form-group:last-child {
     margin-bottom: 0;
 }
+
+@media (max-width: 600px) {
+    .btnCntn {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .player-list {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+}
